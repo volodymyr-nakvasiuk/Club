@@ -14,6 +14,7 @@ contract SimpleAuction is AuctionInterface {
         bool created;
         bool isEnded;
         bool isProcessed;
+        bool isRated;
         bool isDeleted;
     }
     
@@ -42,6 +43,7 @@ contract SimpleAuction is AuctionInterface {
             _price,
             _minBid,
             true,
+            false,
             false,
             false,
             false
@@ -198,12 +200,15 @@ contract SimpleAuction is AuctionInterface {
         require(exists(_lotID));
         require(isEnded(_lotID));
         require(getBidder(_lotID) == msg.sender);
+        require(!lots[_lotID].isRated);
         
         if (_option) {
-            
+            uprate[lots[_lotID].owner]++;
         } else {
             downrate[lots[_lotID].owner]++;
         }
+        
+        lots[_lotID].isRated = true;
     }
 
     /**
