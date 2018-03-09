@@ -30,7 +30,7 @@ contract SimpleAuction is AuctionInterface {
      * @param   _price Amount (in Wei) needed to buy the lot immediately
      * @param   _minBid Amount (in Wei) needed to place a bid.
      */
-    function createLot(string _name, uint _price, uint _minBid) external returns (uint) {
+    function createLot(string _name, uint _price, uint _minBid) public {
         lotNonce++;
 
         lots[lotNonce] = Lot(
@@ -46,8 +46,26 @@ contract SimpleAuction is AuctionInterface {
             false,
             false
         );
-
+    }
+    
+    function getLastLotId() public constant returns(uint){
         return lotNonce;
+    }
+
+    /**
+     * @notice  Creates a lot.
+     * @param   _name The lot name.
+     * @param   _price Amount (in Wei) needed to buy the lot immediately
+     * @param   _minBid Amount (in Wei) needed to place a bid.
+     */
+    function createLot(
+        string _name,
+        uint128 _price,
+        uint128 _minBid
+    ) external returns (uint) {
+        createLot(_name, _price, _minBid);
+
+        return getLastLotId();
     }
     
     /**
@@ -72,8 +90,7 @@ contract SimpleAuction is AuctionInterface {
         uint lastBid,
         uint buyItNowPrice,
         uint minBid
-        )
-    {
+    ) {
         require(exists(_lotID));
         require(!isEnded(_lotID));
         
