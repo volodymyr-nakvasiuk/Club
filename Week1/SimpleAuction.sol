@@ -76,11 +76,9 @@ contract SimpleAuction is AuctionInterface {
      */
     function removeLot(uint _lotID) public {
         require(exists(_lotID));
-        //require(!isEnded(_lotID));
-        //require(!isProcessed(_lotID));
         require(lots[_lotID].lastBid == 0);
         
-        delete lots[_lotID];
+        lots[_lotID].isDeleted = true;
     }
     
     /**
@@ -110,8 +108,6 @@ contract SimpleAuction is AuctionInterface {
      * @param  _lotID Integer identifier associated with target lot
      */
     function bid(uint _lotID) public payable {
-        //require(_lotID <= lotNonce);
-        //require(_lotID > 0);
         require(exists(_lotID));
         require(!isEnded(_lotID));
         
